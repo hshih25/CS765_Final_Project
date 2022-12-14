@@ -44,7 +44,7 @@ st.sidebar.markdown("## Grouping Helper")
 categorical_scope = st.sidebar.multiselect(
     label="Select Categorical Variables",
     options=category_list,
-    default=[category_list[0], category_list[1], category_list[3]]
+    default=[category_list[0], category_list[1]]
 )
 
 # Display warning messages
@@ -89,23 +89,24 @@ if max_value < min_value and max != 0:
 
 
 categorical_scope_adapter(categorical_scope, categorical_scope_dict)
-check_model = CheckSampleSizeModel(data=df, user_selected=categorical_scope_dict, min_sample_size=min_value)
+check_model = CheckSampleSizeModel(data=df, user_selected=categorical_scope_dict, min_sample_size=min_value, max_sample_size=max_value)
 
 check_result = check_model.validate_sample_size()
 if check_result["msg"] != "valid":
-    warnings.warn("The number of sample size in one or more than one group is out of the sample size limit.")
+    error = "The number of sample size in one or more than one group is below or higher than sample size " + check_result["err"] + "."
+    warnings.warn(error)
     st.markdown(
-        "<p style='color:red;'>WARNING: </p>Please reduce the number of category or modify the sample size limit!",
+        "<p style='color:red;'>WARNING: </p>{}".format(error),
         unsafe_allow_html=True,
     )
+   
 else:
     plot_data = check_model.get_group_data()
     presentation_list = [presentation_scope_adapter(i) for i in presentation_scope]
-    vis = Vis(data=plot_data['data'], category_group=plot_data['category_group'], dependent=presentation_list, bin_num=24)
+    vis = Vis(data=plot_data['data'], category_group=plot_data['category_group'], dependent=presentation_list, bin_num=12)
     fig = vis.distribution_plot()
     draw(fig)
 
-    # input_group_column, presentation_column = st.columns([1, 1])
     input_group_column, presentation_column = st.columns([1, 1])
     input_group_column.caption("Current Group Levels")
     display_category_group = generate_tables(plot_data['category_group'])
