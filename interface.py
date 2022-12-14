@@ -5,19 +5,6 @@ import streamlit as st
 apptitle = "CS765 Final Project"
 st.set_page_config(page_title=apptitle, page_icon=":heavy_check_mark:")
 
-# Load a sample dataset
-# Here, we first go with heart failure prediction
-
-# directory = "Data/heart.csv"
-# dataset = read_data(directory)
-
-# Possible variation:
-# if we want to add a component for switching datasets,
-# the following numerics list should be in a dictionary
-
-# To use a customized dataset, you need to specify
-# numeric columns and categorical columns
-
 
 category_list = [
     "Sex",
