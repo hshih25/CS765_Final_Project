@@ -48,7 +48,7 @@ def draw(fig):
             st.pyplot(fig[0])
         return 0
 
-def generate_tables(category_groups):
+def generate_tables(category_groups, df):
     category_group = category_groups[0]
     col_names = category_group.keys()
     table_data = defaultdict(list)
@@ -58,6 +58,8 @@ def generate_tables(category_groups):
                 table_data[col_name].append(category_level_dict[col_name][category_group[col_name]])
             else:
                 table_data[col_name].append(category_group[col_name])
+    for idx in range(len(category_groups)):
+        table_data["Sample size"].append(len(df[df['group_column'] == idx]))
 
     return pd.DataFrame(table_data)
 

@@ -109,6 +109,6 @@ else:
 
     input_group_column, presentation_column = st.columns([1, 1])
     input_group_column.caption("Current Group Levels")
-    display_category_group = generate_tables(plot_data['category_group'])
+    display_category_group = generate_tables(plot_data['category_group'], df)
     input_group_column.write(display_category_group)
 
