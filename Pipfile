@@ -4,10 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+matplotlib = "3.5.0"
 
 [dev-packages]
 
 [requires]
 python_version = "3.8"
-matplotlib = "3.5.0"
 
