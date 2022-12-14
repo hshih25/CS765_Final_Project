@@ -5,8 +5,12 @@ import pandas as pd
 
 
 class CheckSampleSizeModel:
-    def __init__(self, data, user_selected:dict, min_sample_size=0):
+    def __init__(self, data, user_selected:dict, min_sample_size=0, max_sample_size=0):
         self.min_sample_size = min_sample_size
+        if max_sample_size == 0:
+            self.max_sample_size = float("inf")
+        else:
+            self.max_sample_size = max_sample_size
         self.user_selected = user_selected
         self.group_column = "group_column"
         self.data = data
@@ -91,14 +95,19 @@ class CheckSampleSizeModel:
         
         # check every group include at least minimum sample size
         check_group = self.data[self.data["group_column"] != -1].groupby(["group_column"]).count()["TUCASEID"]
-        
+        error = ""
         self.valid = True
         for group_num in check_group:
             if group_num < self.min_sample_size:
                 self.valid = False
+                error = "min limit"
+                break
+            elif group_num > self.max_sample_size:
+                self.valid = False
+                error = "max limit"
                 break
         
-        return {"msg": "valid"} if self.valid else {"msg": "invalid"}
+        return {"msg": "valid", "error": error} if self.valid else {"msg": "invalid", "err": error}
     
     def get_group_data(self):
         if not self.valid:
@@ -147,7 +156,9 @@ class Vis:
                     row, bin_arr, dependent_variable), axis=1)
 
             # draw line chart for each group in each plot
-            for idx in temp_data[self.group_column].unique():
+            temp_seq = temp_data[self.group_column].unique()
+            temp_seq.sort()
+            for idx in temp_seq:
                 use_data = temp_data[temp_data[self.group_column] == idx].copy()
                 use_data = use_data.groupby(
                     [bin_group_name], as_index=False).count()
