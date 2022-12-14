@@ -11,9 +11,9 @@ class CheckSampleSizeModel:
         self.group_column = "group_column"
         self.data = data
         self.category_dict = {
-            "Sex": [1, 2],
-            "Employment": [1, 2],
-            "Race": [1, 2, 3],
+            "Sex": [1, 2], # Male, Feamale
+            "Employment": [1, 2], # Employed, Unemployed
+            "Race": [1, 2, 4],
             "Single": [1, 2, 3],
             "Age": [[0, 21], [21, 65], [65, 86]]
         }
@@ -133,7 +133,8 @@ class Vis:
         fig_list = list()
         
         temp_data = self.data[self.data[self.group_column] != -1].copy()
-        fig, axs = plt.subplots(len(self.dependent))
+        fig, axs = plt.subplots(len(self.dependent), figsize=(12, 9))
+        fig.tight_layout(pad=3.0)
         
         # draw multiple plot if there are more than one dependent variable
         for plot_n in range(len(self.dependent)):
@@ -151,11 +152,22 @@ class Vis:
                 use_data = use_data.groupby(
                     [bin_group_name], as_index=False).count()
                 # print(len(use_data))
-
+                
+                title_text = "The frequency distribution of " + dependent_variable
+                y_label = "# of response"
+                x_label = dependent_variable + " (bin)"
                 if len(self.dependent) == 1:
-                    axs.plot(use_data[bin_group_name], use_data["t13"])
+                    axs.title.set_text(title_text)
+                    axs.set_ylabel(y_label)
+                    axs.set_xlabel(x_label)
+                    axs.plot(use_data[bin_group_name], use_data["t13"], label=str(idx))
+                    axs.legend()
                 else:
-                    axs[plot_n].plot(use_data[bin_group_name], use_data["t13"])
+                    axs[plot_n].title.set_text(title_text)
+                    axs[plot_n].set_ylabel(y_label)
+                    axs[plot_n].set_xlabel(x_label)
+                    axs[plot_n].plot(use_data[bin_group_name], use_data["t13"], label=str(idx))
+                    axs[plot_n].legend()
                     
 
         fig_list.append(fig)

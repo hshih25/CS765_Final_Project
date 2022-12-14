@@ -4,6 +4,30 @@ import pandas as pd
 import streamlit as st
 
 
+category_level_dict = {
+    "Sex": {
+        1: "Male",
+        2: "Female",
+    },
+    "Employment": {
+        1: "Employed",
+        2: "Unemployed",
+    },
+    "Single": {
+        1: "Spourse present",
+        2: "Unmarried partner present",
+        3: "Single",
+    },
+    "Race": {
+        1: "White",
+        2: "Black",
+        4: "Asian",
+    },
+}
+
+
+
+
 
 
 def read_data():
@@ -30,7 +54,10 @@ def generate_tables(category_groups):
     table_data = defaultdict(list)
     for col_name in col_names:
         for category_group in category_groups:
-            table_data[col_name].append(category_group[col_name])
+            if col_name != "Age":
+                table_data[col_name].append(category_level_dict[col_name][category_group[col_name]])
+            else:
+                table_data[col_name].append(category_group[col_name])
 
     return pd.DataFrame(table_data)
 
