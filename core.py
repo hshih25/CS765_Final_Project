@@ -147,7 +147,9 @@ class Vis:
                     row, bin_arr, dependent_variable), axis=1)
 
             # draw line chart for each group in each plot
-            for idx in temp_data[self.group_column].unique():
+            temp_seq = temp_data[self.group_column].unique()
+            temp_seq.sort()
+            for idx in temp_seq:
                 use_data = temp_data[temp_data[self.group_column] == idx].copy()
                 use_data = use_data.groupby(
                     [bin_group_name], as_index=False).count()

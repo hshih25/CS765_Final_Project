@@ -101,7 +101,7 @@ if check_result["msg"] != "valid":
 else:
     plot_data = check_model.get_group_data()
     presentation_list = [presentation_scope_adapter(i) for i in presentation_scope]
-    vis = Vis(data=plot_data['data'], category_group=plot_data['category_group'], dependent=presentation_list, bin_num=10)
+    vis = Vis(data=plot_data['data'], category_group=plot_data['category_group'], dependent=presentation_list, bin_num=24)
     fig = vis.distribution_plot()
     draw(fig)
 
