@@ -111,4 +111,3 @@ else:
     input_group_column.caption("Current Groups")
     display_category_group = generate_tables(plot_data['category_group'])
     input_group_column.write(display_category_group)
-
