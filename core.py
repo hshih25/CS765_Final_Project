@@ -12,7 +12,7 @@ class CheckSampleSizeModel:
         self.data = data
         self.category_dict = {
             "Sex": [1, 2],
-            "EmploymentStatus": [1, 2],
+            "Employment": [1, 2],
             "Race": [1, 2, 3],
             "Single": [1, 2, 3],
             "Age": [[0, 21], [21, 65], [65, 86]]
@@ -48,7 +48,7 @@ class CheckSampleSizeModel:
             helper(type_list, "Sex")
 
         if use_employment_status:
-            helper(type_list, "EmploymentStatus")
+            helper(type_list, "Employment")
 
         if use_race:
             helper(type_list, "Race")
@@ -83,7 +83,7 @@ class CheckSampleSizeModel:
     
     def validate_sample_size(self):
         use_sex, use_employment_status, use_race, use_single, use_age = \
-            self.user_selected["Sex"], self.user_selected["EmploymentStatus"],\
+            self.user_selected["Sex"], self.user_selected["Employment"],\
             self.user_selected["Race"], self.user_selected["Single"], self.user_selected["Age"]   
             
         self.category_group = self._build_categories(use_sex, use_employment_status, use_race, use_single, use_age)
@@ -95,7 +95,7 @@ class CheckSampleSizeModel:
         self.valid = True
         for group_num in check_group:
             if group_num < self.min_sample_size:
-                valid = False
+                self.valid = False
                 break
         
         return {"msg": "valid"} if self.valid else {"msg": "invalid"}
@@ -117,7 +117,7 @@ class Vis:
     
     def _get_bin(self, n, col_name):
         min_ = self.data[col_name].min()
-        max_ = df[col_name].max()
+        max_ = self.data[col_name].max()
         bin_arr = []
         divi = (max_ - min_) // n
         for i in range(n + 1):
