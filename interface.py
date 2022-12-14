@@ -80,7 +80,7 @@ min_value = st.sidebar.number_input(
 )
 
 
-if max_value < min_value and max != 0:
+if max_value < min_value and max_value != 0:
     warnings.warn("Min value cannot greater than max")
     st.markdown(
         "<p style='color:red;'>WARNING: </p>Please select correct min value to begin!",
