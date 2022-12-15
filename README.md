@@ -28,3 +28,4 @@ The following link is Streamlit's website. It has well-documented instruction.
 ### Running Locally
 
 After successfully installing streamlit, you can pull the repository to a local folder and change to folder and run the following commend.
+`streamlit run interface.py`
