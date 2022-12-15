@@ -15,13 +15,10 @@ The following link is the web demo of Subgroup Data Visualizer
 
 ### Core Dependencies
 
-*Python 3.7 - 3.9
-
-*matplotlib 3.5.0
-
-*pandas 1.3.4
-
-*streamlit 1.2.0
+<li>Python 3.7 - 3.9
+<li>matplotlib 3.5.0
+<li>pandas 1.3.4
+<li>streamlit 1.2.0
 
 ### Installing Streamlit
 The following link is Streamlit's website. It has well-documented instruction.
@@ -29,3 +26,5 @@ The following link is Streamlit's website. It has well-documented instruction.
 
 
 ### Running Locally
+
+After successfully installing streamlit, you can pull the repository to a local folder and change to folder and run the following commend.
