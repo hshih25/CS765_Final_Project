@@ -1,7 +1,10 @@
 # Subgroup Data Visualizer
 
+
+
 ## Web Demo
-The following link is the web demo of Subgroup Data Visualizer
+The following link is the web demo of Subgroup Data Visualizer.
+
 [Demo](https://hshih25-cs765-final-project-interface-k8n25y.streamlit.app/)
 
 ## System Requirement
