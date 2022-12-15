@@ -30,3 +30,11 @@ The following link is Streamlit's website. It has well-documented instruction.
 After successfully installing streamlit, you can pull the repository to a local folder and change to folder and run the following commend.
 
 >streamlit run interface.py
+
+You should see the address link in terminal. Copy it to the browser then you will see the Subgroup Data Visualizer in the browser.
+
+
+## Author 
+Hao-Yu Shih
+Shutao Wang
+Yun-Chen Tu
