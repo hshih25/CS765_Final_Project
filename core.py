@@ -7,7 +7,19 @@ import pandas as pd
 group_column = "group_column"
 
 class CheckSampleSizeModel:
+    """
+    The model is used to validate the sample size. As the users select the category, this model will categorize data based on
+    the selection and check whether each group include the number between the mininum and maximum sample size limit.
+    """
     def __init__(self, data, user_selected:dict, min_sample_size=0, max_sample_size=0):
+        """
+        Parameters:
+            data: A data in pandas dataframe format.
+            user_selected (dict): A dictionary marking whether specific category is chosen.
+            min_sample_size (int): The minimum sample size that user set up.
+            max_sample_size (int): The maximum sample size that user set up.
+
+        """
         self.min_sample_size = min_sample_size
         if max_sample_size == 0:
             self.max_sample_size = float("inf")
@@ -29,6 +41,9 @@ class CheckSampleSizeModel:
         self._transfer_type()
 
     def _transfer_age(self, x) -> str: 
+        """
+        
+        """
         if x < 21:
             return "1"
         elif x < 65:
@@ -37,6 +52,9 @@ class CheckSampleSizeModel:
             return "3"
     
     def _transfer_type(self):
+        """
+        Helper function to transfer data type.
+        """
         self.data[["Race_str", "Single_str", "Employment_str", "Sex_str"]] = self.data[["Race", "Single", "Employment", "Sex"]].astype(str)
 
 
@@ -96,6 +114,13 @@ class CheckSampleSizeModel:
 
     
     def validate_sample_size(self):
+        """
+        Validate sample size.
+
+        Return
+            msg (str): return whether the category group have enough sample size.
+            err (str): record the inforamtion about message.
+        """
         use_sex, use_employment_status, use_race, use_single, use_age = \
             self.user_selected["Sex"], self.user_selected["Employment"],\
             self.user_selected["Race"], self.user_selected["Single"], self.user_selected["Age"]   
@@ -120,7 +145,7 @@ class CheckSampleSizeModel:
                 error = "max limit"
                 break
         
-        return {"msg": "valid", "error": error} if self.valid else {"msg": "invalid", "err": error}
+        return {"msg": "valid", "err": error} if self.valid else {"msg": "invalid", "err": error}
     
     def get_group_data(self):
         if not self.valid:
@@ -130,6 +155,9 @@ class CheckSampleSizeModel:
 
 
 class Vis:
+    """
+    This class is used to build visualization.
+    """
     def __init__(self, data=None, category_group=None, dependent=None, bin_num=None):
         self.category_group = category_group # list from build_categories
         self.data = data
@@ -152,6 +180,9 @@ class Vis:
                 return i - 1
         
     def distribution_plot(self):
+        """
+        This function will return the distribution plot.
+        """
         fig_list = list()
         
         temp_data = self.data[self.data[self.group_column] != -1]
