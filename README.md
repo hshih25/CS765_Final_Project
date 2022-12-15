@@ -14,10 +14,10 @@ The following link is the web demo of Subgroup Data Visualizer
 `util.py`:
 
 ### Core Dependencies
-..#Python 3.7 - 3.9
-..#matplotlib 3.5.0
-..#pandas 1.3.4
-..#streamlit 1.2.0
++Python 3.7 - 3.9
++matplotlib 3.5.0
++pandas 1.3.4
++streamlit 1.2.0
 
 ### Installing Streamlit
 The following link is Streamlit's website. It has well-documented instruction.
