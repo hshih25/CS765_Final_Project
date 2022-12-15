@@ -33,7 +33,7 @@ present_list = [
 
 # streamlit interface
 
-st.sidebar.markdown("## Grouping Helper")
+st.sidebar.markdown("## Subgroup Data Visualizer")
 
 categorical_scope = st.sidebar.multiselect(
     label="Select Categorical Variables",
