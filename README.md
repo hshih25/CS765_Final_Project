@@ -1,7 +1,4 @@
-# CS765-Project
-## Subgroup Data Visualizer
-
-
+# Subgroup Data Visualizer
 
 ## Web Demo
 The following link is the web demo of Subgroup Data Visualizer
@@ -10,9 +7,12 @@ The following link is the web demo of Subgroup Data Visualizer
 ## System Requirement
 ### Component
 `core.py`:
+
 `interface.py`:
+
 `util.py`:
 
+`atussum_0321-reduced.csv`:
 ### Core Dependencies
 
 <li>Python 3.7 - 3.9
