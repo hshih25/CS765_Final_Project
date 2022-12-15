@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 
 
+
 category_level_dict = {
     "Sex": {
         1: "Male",
@@ -23,11 +24,12 @@ category_level_dict = {
         2: "Black",
         4: "Asian",
     },
+        "Age": {
+        1: [0, 21], 
+        2: [21, 65], 
+        3: [65, 86],
+    },
 }
-
-
-
-
 
 
 def read_data():
@@ -47,6 +49,7 @@ def draw(fig):
         with st.container():
             st.pyplot(fig[0])
         return 0
+    
 
 def generate_tables(category_groups, df):
     category_group = category_groups[0]
@@ -54,10 +57,8 @@ def generate_tables(category_groups, df):
     table_data = defaultdict(list)
     for col_name in col_names:
         for category_group in category_groups:
-            if col_name != "Age":
-                table_data[col_name].append(category_level_dict[col_name][category_group[col_name]])
-            else:
-                table_data[col_name].append(category_group[col_name])
+            table_data[col_name].append(category_level_dict[col_name][category_group[col_name]])
+            
     for idx in range(len(category_groups)):
         table_data["Sample size"].append(len(df[df['group_column'] == idx]))
 

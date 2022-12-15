@@ -1,8 +1,10 @@
+from collections import defaultdict
+
 import matplotlib.pyplot as plt
 import pandas as pd
 
 
-
+group_column = "group_column"
 
 class CheckSampleSizeModel:
     def __init__(self, data, user_selected:dict, min_sample_size=0, max_sample_size=0):
@@ -12,18 +14,32 @@ class CheckSampleSizeModel:
         else:
             self.max_sample_size = max_sample_size
         self.user_selected = user_selected
-        self.group_column = "group_column"
+        self.group_column = group_column
         self.data = data
         self.category_dict = {
             "Sex": [1, 2], # Male, Feamale
             "Employment": [1, 2], # Employed, Unemployed
             "Race": [1, 2, 4],
             "Single": [1, 2, 3],
-            "Age": [[0, 21], [21, 65], [65, 86]]
+            "Age": [1, 2, 3] # 0, 21], [21, 65], [65, 86]
         }
         self.valid = False
         self.category_group = None
+        self.data["Age_str"] = self.data["Age"].apply(lambda x: self._transfer_age(x))
+        self._transfer_type()
+
+    def _transfer_age(self, x) -> str: 
+        if x < 21:
+            return "1"
+        elif x < 65:
+            return "2"
+        else:
+            return "3"
     
+    def _transfer_type(self):
+        self.data[["Race_str", "Single_str", "Employment_str", "Sex_str"]] = self.data[["Race", "Single", "Employment", "Sex"]].astype(str)
+
+
     def _build_categories(self, use_sex=False, use_employment_status=False, \
                      use_race=False, use_single=False, use_age=False):
         type_list = list()
@@ -63,27 +79,21 @@ class CheckSampleSizeModel:
         if use_age:
             helper(type_list, "Age")
         return type_list
-                
+    
+    def _build_adpater(self, type_list):
+        key_list = list(type_list[0].keys())
+        key_column_list = list()
+        concat_key_list = []
+        for key_dict in type_list:
+            concat_key = "".join(str(key_dict[key]) for key in key_list)
+            concat_key_list.append(concat_key)
+        for key in key_list:
+            key_column_list.append(key+"_str")
+        concat_key_adapter = defaultdict(lambda: -1)
+        for idx, key_ in enumerate(concat_key_list):
+            concat_key_adapter[key_] = idx
+        return key_column_list, concat_key_adapter
 
-
-    def _categorise(self, row, group_infos):
-        for idx, group_info in enumerate(group_infos):
-            check_group = True
-            for k, v in group_info.items():
-                if check_group == False:
-                    break
-                if k != "Age":
-                    if row[k] != v:
-                        check_group = False
-                        break
-                else:
-                    if v[0] > row[k] or row[k] >= v[1]:
-                        check_group = False
-                        break
-
-            if check_group:
-                return idx
-        return -1
     
     def validate_sample_size(self):
         use_sex, use_employment_status, use_race, use_single, use_age = \
@@ -91,10 +101,13 @@ class CheckSampleSizeModel:
             self.user_selected["Race"], self.user_selected["Single"], self.user_selected["Age"]   
             
         self.category_group = self._build_categories(use_sex, use_employment_status, use_race, use_single, use_age)
-        self.data[self.group_column] = self.data.apply(lambda row: self._categorise(row, self.category_group), axis=1)
+        concat_key_list, concat_key_adapter = self._build_adpater(self.category_group)
+        self.data['concat_key'] = self.data[concat_key_list].apply(lambda x: ''.join(x), axis=1)
+        self.data[self.group_column] = self.data['concat_key'].apply(lambda x: concat_key_adapter[x])
+     
         
         # check every group include at least minimum sample size
-        check_group = self.data[self.data["group_column"] != -1].groupby(["group_column"]).count()["TUCASEID"]
+        check_group = self.data[self.data[self.group_column] != -1].groupby([self.group_column]).count()["TUCASEID"]
         error = ""
         self.valid = True
         for group_num in check_group:
@@ -122,7 +135,7 @@ class Vis:
         self.data = data
         self.dependent = dependent
         self.bin_num = bin_num
-        self.group_column = "group_column"
+        self.group_column = group_column
     
     def _get_bin(self, n, col_name):
         min_ = self.data[col_name].min()
@@ -141,8 +154,9 @@ class Vis:
     def distribution_plot(self):
         fig_list = list()
         
-        temp_data = self.data[self.data[self.group_column] != -1].copy()
-        fig, axs = plt.subplots(len(self.dependent), figsize=(12, 9))
+        temp_data = self.data[self.data[self.group_column] != -1]
+        length = 7 * len(self.dependent)
+        fig, axs = plt.subplots(len(self.dependent), figsize=(12, length))
         fig.tight_layout(pad=3.0)
         
         # draw multiple plot if there are more than one dependent variable
@@ -159,7 +173,7 @@ class Vis:
             temp_seq = temp_data[self.group_column].unique()
             temp_seq.sort()
             for idx in temp_seq:
-                use_data = temp_data[temp_data[self.group_column] == idx].copy()
+                use_data = temp_data[temp_data[self.group_column] == idx]
                 use_data = use_data.groupby(
                     [bin_group_name], as_index=False).count()
                 # print(len(use_data))
@@ -172,15 +186,14 @@ class Vis:
                     axs.set_ylabel(y_label)
                     axs.set_xlabel(x_label)
                     axs.plot(use_data[bin_group_name], use_data["t13"], label=str(idx))
-                    axs.legend()
+                    axs.legend(loc="upper right", bbox_to_anchor=(1.1, 1.0))
                 else:
                     axs[plot_n].title.set_text(title_text)
                     axs[plot_n].set_ylabel(y_label)
                     axs[plot_n].set_xlabel(x_label)
                     axs[plot_n].plot(use_data[bin_group_name], use_data["t13"], label=str(idx))
-                    axs[plot_n].legend()
+                    if plot_n == 0:
+                        axs[plot_n].legend(loc="upper right", bbox_to_anchor=(1.1, 1.0))
                     
-
         fig_list.append(fig)
         return fig_list
-            

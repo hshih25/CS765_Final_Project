@@ -14,13 +14,7 @@ st.set_page_config(page_title=apptitle, page_icon=":heavy_check_mark:")
 
 df = read_data()
 
-categorical_scope_dict = {
-    "Sex": False,
-    "Race": False,
-    "Employment": False,
-    "Age": False,
-    "Single": False,
-}
+categorical_scope_dict = defaultdict(lambda: False)
 
 category_list = [
     "Sex",
@@ -30,12 +24,12 @@ category_list = [
     "Single",
 ]
 
-
 present_list = [
     "T01_Personal Care Activities",
     "T05_Work & Work-Related Activities",
     "T12_Socializing, Relaxing, and Leisure",
 ]
+
 
 # streamlit interface
 
@@ -107,8 +101,7 @@ else:
     fig = vis.distribution_plot()
     draw(fig)
 
-    input_group_column, presentation_column = st.columns([1, 1])
-    input_group_column.caption("Current Group Levels")
-    display_category_group = generate_tables(plot_data['category_group'], df)
+    input_group_column, presentation_column = st.columns([1,1])
+    input_group_column.caption("Cateogy")
+    display_category_group = generate_tables(plot_data['category_group'], plot_data['data'])
     input_group_column.write(display_category_group)
-
