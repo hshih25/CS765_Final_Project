@@ -6,13 +6,13 @@ The following link is the web demo of Subgroup Data Visualizer
 
 ## System Requirement
 ### Component
-`core.py`:
+`core.py`: The file consist the main logic of Subgroup Visualizer. 
 
-`interface.py`:
+`interface.py`: The file consist the User Interface and the warning logic.
 
-`util.py`:
+`util.py`: The file consist helper methods of core logic.
 
-`atussum_0321-reduced.csv`:
+`atussum_0321-reduced.csv`: The dataset.
 ### Core Dependencies
 
 <li>Python 3.7 - 3.9
