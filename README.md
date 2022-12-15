@@ -16,8 +16,11 @@ The following link is the web demo of Subgroup Data Visualizer
 ### Core Dependencies
 
 *Python 3.7 - 3.9
+
 *matplotlib 3.5.0
+
 *pandas 1.3.4
+
 *streamlit 1.2.0
 
 ### Installing Streamlit
